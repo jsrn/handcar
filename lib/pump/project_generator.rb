@@ -1,0 +1,2 @@
+class ProjectGenerator
+end

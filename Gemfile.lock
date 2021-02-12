@@ -1,11 +1,11 @@
 PATH
   remote: .
   specs:
-    handcar (0.0.4)
-      erubis
-      multi_json
-      rack
-      sqlite3
+    handcar (0.0.5)
+      erubis (~> 2.7)
+      multi_json (~> 1.15)
+      rack (~> 2.2.3)
+      sqlite3 (~> 1.4.2)
 
 GEM
   remote: https://rubygems.org/
@@ -26,7 +26,7 @@ DEPENDENCIES
   bundler (~> 2.0)
   handcar!
   minitest (~> 5.0)
-  rack-test
+  rack-test (~> 1.1)
   rake (~> 10.0)
 
 BUNDLED WITH
