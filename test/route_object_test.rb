@@ -21,7 +21,7 @@ class RouteObjectTest < Minitest::Test
 
   def test_resources
     routes = Handcar::RouteObject.new
-    routes.resources :quotes
+    routes.resources :greetings
 
     rules = routes.rules
     rules.shift

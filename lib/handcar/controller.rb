@@ -1,4 +1,4 @@
-require "handcar/file_model"
+require "handcar/sqlite_model"
 
 module Handcar
   class Controller
