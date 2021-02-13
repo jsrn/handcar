@@ -6,7 +6,6 @@ module Handcar
 
     def initialize(env)
       @env = env
-      annotate_controller_start
       @routing_params = {}
     end
 
@@ -35,8 +34,6 @@ module Handcar
     end
 
     def render(view_name, locals = {})
-      annotate_rendering_start
-
       instance_variables.each do |variable|
         locals[variable] = instance_variable_get(variable)
       end
@@ -75,14 +72,6 @@ module Handcar
 
     def action
       params['action']
-    end
-
-    def annotate_controller_start
-      @env[:controller_started] = Time.now.to_i
-    end
-
-    def annotate_rendering_start
-      @env[:rendering_started] = Time.now.to_i
     end
   end
 end
