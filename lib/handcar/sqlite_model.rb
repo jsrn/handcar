@@ -47,6 +47,13 @@ SQL
       def method_missing(method, *args, &block)
         if self.class.schema.keys.include?(method.to_s)
           self[method]
+        elsif method.to_s.end_with?('=')
+          potential_attribute = method.to_s[0..-2]
+          if self.class.schema.keys.include?(potential_attribute)
+            self[potential_attribute] = args.first
+          else
+            super(method, *args, &block)
+          end
         else
           super(method, *args, &block)
         end
@@ -54,6 +61,8 @@ SQL
 
       def respond_to_missing?(method, *args, &block)
         if schema.keys.include?(method.to_s)
+          true
+        elsif method.to_s.end_with?('=') && schema.keys.include?(method.to_s[0..-2])
           true
         else
           super(method, *args, &block)

@@ -27,6 +27,12 @@ class SqliteModelTest < Minitest::Test
   def test_assign_value_to_model
     quote = Quote.new
     quote['author'] = 'Bill'
+    assert_equal 'Bill', quote['author']
+  end
+
+  def test_attributes_are_also_accessible_as_methods
+    quote = Quote.new
+    quote['author'] = 'Bill'
     assert_equal 'Bill', quote.author
   end
 
@@ -40,6 +46,16 @@ class SqliteModelTest < Minitest::Test
     quote = Quote.new
     quote['author'] = 'Bill'
     assert_equal true, quote.save
+  end
+
+  def test_attributes_can_be_assigned_as_fields
+    quote = Quote.create('author' => 'John')
+
+    quote.author = 'Bill'
+    quote.save
+
+    quote = Quote.find(quote.id)
+    assert_equal 'Bill', quote.author
   end
 
   def test_saving_previously_unsaved_record_changes_count
