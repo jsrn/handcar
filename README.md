@@ -14,7 +14,7 @@ I made this framework to follow along with Noah Gibb's lovely book [Rebuilding R
     $ handcar new my_app
     $ cd my_app
     $ bundle install
-    $ rackup -p 3001
+    $ handcar serve
 
 
 ## Features

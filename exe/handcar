@@ -2,6 +2,7 @@
 
 require 'optparse'
 require_relative '../lib/pump/project_generator'
+require_relative '../lib/pump/server'
 require_relative '../lib/handcar/version'
 
 options = {
@@ -22,4 +23,6 @@ when 'new'
   ProjectGenerator.new(options[:path]).generate
 when 'version'
   puts Handcar::VERSION
+when 'serve', 's'
+  Handcar::Server.new(options).serve
 end
