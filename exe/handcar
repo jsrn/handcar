@@ -1,11 +1,25 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
 require_relative '../lib/pump/project_generator'
+require_relative '../lib/handcar/version'
 
-action, path, *rest = ARGV
+options = {
+  action: ARGV.shift
+}
 
-if action == 'new'
-  ProjectGenerator.new(path).generate
-else
-  puts 'action must be new'
+OptionParser.new do |opts|
+  opts.banner = "Usage: handcar [options]"
+
+  opts.on("-v", "--[no-]verbose", "Print the current version") do |v|
+    options[:action] = 'version'
+  end
+end.parse!
+
+case options[:action]
+when 'new'
+  options[:path] = ARGV.shift
+  ProjectGenerator.new(options[:path]).generate
+when 'version'
+  puts Handcar::VERSION
 end
