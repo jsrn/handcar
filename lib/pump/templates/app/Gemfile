@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem "handcar", path: '~/Code/personal/handcar'
+gem "handcar"
 
 group :development do
   gem "rerun"

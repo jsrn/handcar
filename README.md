@@ -9,19 +9,11 @@ I made this framework to follow along with Noah Gibb's lovely book [Rebuilding R
 
 ## Getting Started
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'handcar'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
     $ gem install handcar
+    $ handcar new my_app
+    $ cd my_app
+    $ bundle install
+    $ rackup -p 3001
 
 
 ## License
