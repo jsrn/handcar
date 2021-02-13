@@ -17,6 +17,13 @@ I made this framework to follow along with Noah Gibb's lovely book [Rebuilding R
     $ rackup -p 3001
 
 
+## Features
+
+* Rails-style MVC action.
+* Integrates with SQLite.
+* Provides a CLI utility to generate a new project.
+
+
 ## License
 
 This code is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT). It's very much derived from the [original project](https://github.com/noahgibbs/rulers), which is also available under the MIT license at the time of writing.
