@@ -9,7 +9,8 @@ I made this framework to follow along with Noah Gibb's lovely book [Rebuilding R
 
 ## Getting Started
 
-    $ gem install handcar
+    $ gem build handcar.gemspec
+    $ gem install handcar-0.0.5.gem
     $ handcar new my_app
     $ cd my_app
     $ bundle install
