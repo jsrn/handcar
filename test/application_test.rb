@@ -1,13 +1,6 @@
 require_relative "test_helper"
 
-class TestController < Handcar::Controller
-  def index
-    'Hello!' # Not rendering a view
-  end
-end
-
-class TestApp < Handcar::Application
-end
+class TestApp < Handcar::Application; end
 
 class HandcarAppTest < Minitest::Test
   include Rack::Test::Methods

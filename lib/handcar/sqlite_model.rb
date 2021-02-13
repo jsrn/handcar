@@ -1,12 +1,18 @@
 require 'sqlite3'
 require 'handcar/util'
 
-DB = SQLite3::Database.new('test.db')
-
 module Handcar
   module Model
     class SQLite
-      def initialize(data = nil)
+      def self.database
+        @database ||= SQLite3::Database.new('test.db')
+      end
+
+      def self.database=(database)
+        @database = database
+      end
+
+      def initialize(data = {})
         @hash = data
       end
 
@@ -20,13 +26,13 @@ module Handcar
 
       def save!
         unless @hash["id"]
-          self.class.create
+          self.class.create(@hash)
           return true
         end
         fields = @hash.map do |k, v|
           "#{k}=#{self.class.to_sql(v)}"
         end.join ","
-        DB.execute <<SQL
+        self.class.database.execute <<SQL
 UPDATE #{self.class.table}
 SET #{fields}
 WHERE id = #{@hash["id"]}
@@ -68,7 +74,7 @@ SQL
       end
 
       def self.all
-        data = DB.execute(<<SQL)
+        data = database.execute(<<SQL)
 SELECT #{schema.keys.join ","} FROM #{table};
 SQL
         data.map { |row| self.new(Hash[schema.keys.zip(row)]) }
@@ -84,22 +90,22 @@ SQL
         query = <<SQL
 INSERT INTO #{table} (#{keys.join ","}) VALUES (#{vals.join ","});
 SQL
-        DB.execute(query)
+        database.execute(query)
         raw_vals = keys.map { |k| values[k] }
         data = Hash[keys.zip raw_vals]
         sql = "SELECT last_insert_rowid();"
-        data["id"] = DB.execute(sql)[0][0]
+        data["id"] = database.execute(sql)[0][0]
         self.new data
       end
 
       def self.count
-        DB.execute(<<SQL)[0][0]
+        database.execute(<<SQL)[0][0]
 SELECT COUNT(*) FROM #{table}
 SQL
       end
 
       def self.find(id)
-        row = DB.execute(<<SQL)
+        row = database.execute(<<SQL)
 SELECT #{schema.keys.join ","} FROM #{table} WHERE id = #{id};
 SQL
         data = Hash[schema.keys.zip row[0]]
@@ -114,7 +120,7 @@ SQL
         return @schema if @schema
 
         @schema = {}
-        DB.table_info(table) do |row|
+        database.table_info(table) do |row|
           @schema[row['name']] = row['type']
         end
         @schema
