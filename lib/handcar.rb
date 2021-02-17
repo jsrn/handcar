@@ -1,10 +1,10 @@
-require 'handcar/version'
-require 'handcar/routing'
-require 'handcar/util'
-require 'handcar/dependencies'
-require 'handcar/controller'
-require 'handcar/sqlite_model'
-require 'handcar/view'
+require "handcar/version"
+require "handcar/routing"
+require "handcar/util"
+require "handcar/dependencies"
+require "handcar/controller"
+require "handcar/sqlite_model"
+require "handcar/view"
 
 module Handcar
   class Application
@@ -14,9 +14,9 @@ module Handcar
     end
 
     def get_rack_app(env)
-      raise 'No routes!' unless @route_obj
+      raise "No routes!" unless @route_obj
 
-      @route_obj.check_url(env['PATH_INFO'], env['REQUEST_METHOD'])
+      @route_obj.check_url(env["PATH_INFO"], env["REQUEST_METHOD"])
     end
 
     def call(env)
@@ -25,7 +25,7 @@ module Handcar
       if app
         app.call(env)
       else
-        [404, { 'Content-Type' => 'text/html' }, ['Not Found']]
+        [404, {"Content-Type" => "text/html"}, ["Not Found"]]
       end
     end
   end

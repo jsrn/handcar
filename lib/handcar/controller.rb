@@ -11,23 +11,21 @@ module Handcar
 
     def dispatch(action, routing_params = {})
       @routing_params = routing_params
-      text = self.send(action)
+      text = send(action)
       r = get_response
       if r
         [r.status, r.headers, [r.body].flatten]
       else
-        [200, {'Content-Type' => 'text/html'},
-         [text].flatten]
+        [200, {"Content-Type" => "text/html"},
+          [text].flatten]
       end
     end
 
     def self.action(act, rp = {})
-      proc { |e| self.new(e).dispatch(act, rp) }
+      proc { |e| new(e).dispatch(act, rp) }
     end
 
-    def env
-      @env
-    end
+    attr_reader :env
 
     def request
       @request ||= Rack::Request.new(env)
@@ -45,23 +43,19 @@ module Handcar
 
     def controller_name
       klass = self.class
-      klass = klass.to_s.gsub(/Controller$/, '')
+      klass = klass.to_s.gsub(/Controller$/, "")
       Handcar.to_underscore(klass)
     end
 
-    def response(text, status = 200, headers = { 'Content-Type' => 'text/html'})
-      raise 'Already responded!' if @response
+    def response(text, status = 200, headers = {"Content-Type" => "text/html"})
+      raise "Already responded!" if @response
 
       a = [text].flatten
       @response = Rack::Response.new(a, status, headers)
     end
 
     def get_response
-      if @response
-        @response
-      else
-        render(action)
-      end
+      @response || render(action)
     end
 
     private
@@ -71,7 +65,7 @@ module Handcar
     end
 
     def action
-      params['action']
+      params["action"]
     end
   end
 end

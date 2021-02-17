@@ -1,15 +1,15 @@
-require 'sqlite3'
-require 'handcar/util'
+require "sqlite3"
+require "handcar/util"
 
 module Handcar
   module Model
     class SQLite
       def self.database
-        @database ||= SQLite3::Database.new('test.db')
+        @database ||= SQLite3::Database.new("test.db")
       end
 
-      def self.database=(database)
-        @database = database
+      class << self
+        attr_writer :database
       end
 
       def initialize(data = {})
@@ -29,25 +29,27 @@ module Handcar
           self.class.create(@hash)
           return true
         end
-        fields = @hash.map do |k, v|
+        fields = @hash.map { |k, v|
           "#{k}=#{self.class.to_sql(v)}"
-        end.join ","
-        self.class.database.execute <<SQL
-UPDATE #{self.class.table}
-SET #{fields}
-WHERE id = #{@hash["id"]}
-SQL
+        }.join ","
+        self.class.database.execute <<~SQL
+          UPDATE #{self.class.table}
+          SET #{fields}
+          WHERE id = #{@hash["id"]}
+        SQL
         true
       end
 
       def save
-        self.save! rescue false
+        save!
+      rescue
+        false
       end
 
       def method_missing(method, *args, &block)
         if self.class.schema.keys.include?(method.to_s)
           self[method]
-        elsif method.to_s.end_with?('=')
+        elsif method.to_s.end_with?("=")
           potential_attribute = method.to_s[0..-2]
           if self.class.schema.keys.include?(potential_attribute)
             self[potential_attribute] = args.first
@@ -62,7 +64,7 @@ SQL
       def respond_to_missing?(method, *args, &block)
         if schema.keys.include?(method.to_s)
           true
-        elsif method.to_s.end_with?('=') && schema.keys.include?(method.to_s[0..-2])
+        elsif method.to_s.end_with?("=") && schema.keys.include?(method.to_s[0..-2])
           true
         else
           super(method, *args, &block)
@@ -72,7 +74,7 @@ SQL
       def self.to_sql(val)
         case val
         when NilClass
-          'null'
+          "null"
         when Numeric
           val.to_s
         when String
@@ -83,42 +85,42 @@ SQL
       end
 
       def self.all
-        data = database.execute(<<SQL)
-SELECT #{schema.keys.join ","} FROM #{table};
-SQL
-        data.map { |row| self.new(Hash[schema.keys.zip(row)]) }
+        data = database.execute(<<~SQL)
+          SELECT #{schema.keys.join ","} FROM #{table};
+        SQL
+        data.map { |row| new(Hash[schema.keys.zip(row)]) }
       end
 
       def self.create(values)
-        values.delete('id')
-        keys = schema.keys - ['id']
-        vals = keys.map do |key|
-          values[key] ? to_sql(values[key]) : 'null'
-        end
+        values.delete("id")
+        keys = schema.keys - ["id"]
+        vals = keys.map { |key|
+          values[key] ? to_sql(values[key]) : "null"
+        }
 
-        query = <<SQL
-INSERT INTO #{table} (#{keys.join ","}) VALUES (#{vals.join ","});
-SQL
+        query = <<~SQL
+          INSERT INTO #{table} (#{keys.join ","}) VALUES (#{vals.join ","});
+        SQL
         database.execute(query)
         raw_vals = keys.map { |k| values[k] }
         data = Hash[keys.zip raw_vals]
         sql = "SELECT last_insert_rowid();"
         data["id"] = database.execute(sql)[0][0]
-        self.new data
+        new data
       end
 
       def self.count
-        database.execute(<<SQL)[0][0]
-SELECT COUNT(*) FROM #{table}
-SQL
+        database.execute(<<~SQL)[0][0]
+          SELECT COUNT(*) FROM #{table}
+        SQL
       end
 
       def self.find(id)
-        row = database.execute(<<SQL)
-SELECT #{schema.keys.join ","} FROM #{table} WHERE id = #{id};
-SQL
+        row = database.execute(<<~SQL)
+          SELECT #{schema.keys.join ","} FROM #{table} WHERE id = #{id};
+        SQL
         data = Hash[schema.keys.zip row[0]]
-        self.new data
+        new data
       end
 
       def self.table
@@ -130,7 +132,7 @@ SQL
 
         @schema = {}
         database.table_info(table) do |row|
-          @schema[row['name']] = row['type']
+          @schema[row["name"]] = row["type"]
         end
         @schema
       end

@@ -5,18 +5,18 @@ module Handcar
       @rules = [{
         regexp: Regexp.new("^/favicon.ico$"),
         vars: {},
-        dest: proc {[404, {'Content-Type' => 'text/html'}, ['Not Found']]},
+        dest: proc { [404, {"Content-Type" => "text/html"}, ["Not Found"]] },
         options: {}
       }]
     end
 
     def root(*args)
-      match '', *args
+      match "", *args
     end
 
     def resources(key)
-      match key.to_s, default: { 'controller' => key.to_s, 'action' => 'index' }, via: :get
-      match "#{key}/:id", default: { 'controller' => key.to_s, 'action' => 'show' }, via: :get
+      match key.to_s, default: {"controller" => key.to_s, "action" => "index"}, via: :get
+      match "#{key}/:id", default: {"controller" => key.to_s, "action" => "show"}, via: :get
     end
 
     def match(url, *args)
@@ -31,7 +31,7 @@ module Handcar
       parts.select! { |p| !p.empty? }
 
       vars = []
-      regexp_parts = parts.map do |part|
+      regexp_parts = parts.map { |part|
         if part[0] == ":"
           vars << part[1..-1]
           "([a-zA-Z0-9]+)"
@@ -41,7 +41,7 @@ module Handcar
         else
           part
         end
-      end
+      }
       regexp = regexp_parts.join("/")
       @rules.push({
         regexp: Regexp.new("^/#{regexp}$"),
@@ -70,7 +70,7 @@ module Handcar
         else
           controller = params["controller"]
           action = params["action"]
-          return get_dest("#{controller}" +
+          return get_dest(controller.to_s +
                               "##{action}", params)
         end
       end

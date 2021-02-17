@@ -1,4 +1,4 @@
-require 'handcar'
+require "handcar"
 
 $LOAD_PATH << File.join(File.dirname(__FILE__),
   "..",

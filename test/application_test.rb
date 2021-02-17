@@ -9,41 +9,41 @@ class HandcarAppTest < Minitest::Test
     app = TestApp.new
 
     app.route do
-      destination = proc { [200, { 'Content-Type' => 'text/html' }, ['Hello, world!']] }
+      destination = proc { [200, {"Content-Type" => "text/html"}, ["Hello, world!"]] }
       root destination
-      match 'quotes/create', destination, via: 'post'
+      match "quotes/create", destination, via: "post"
     end
 
     app
   end
 
   def test_request
-    get '/'
+    get "/"
 
     assert last_response.ok?
     body = last_response.body
-    assert body['Hello']
+    assert body["Hello"]
   end
 
   def test_post
-    post '/'
+    post "/"
 
     assert last_response.ok?
     body = last_response.body
-    assert body['Hello']
+    assert body["Hello"]
   end
 
   def test_do_not_support_favicon
-    get '/favicon.ico'
+    get "/favicon.ico"
 
     assert last_response.not_found?
   end
 
   def test_verb_specific_actions
-    get '/quotes/create'
+    get "/quotes/create"
     assert last_response.not_found?
 
-    post '/quotes/create'
+    post "/quotes/create"
     assert last_response.ok?
   end
 end

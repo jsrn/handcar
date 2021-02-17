@@ -1,28 +1,28 @@
 #!/usr/bin/env ruby
 
-require 'optparse'
-require_relative '../lib/pump/project_generator'
-require_relative '../lib/pump/server'
-require_relative '../lib/handcar/version'
+require "optparse"
+require_relative "../lib/pump/project_generator"
+require_relative "../lib/pump/server"
+require_relative "../lib/handcar/version"
 
 options = {
   action: ARGV.shift
 }
 
-OptionParser.new do |opts|
+OptionParser.new { |opts|
   opts.banner = "Usage: handcar [options]"
 
   opts.on("-v", "--[no-]verbose", "Print the current version") do |v|
-    options[:action] = 'version'
+    options[:action] = "version"
   end
-end.parse!
+}.parse!
 
 case options[:action]
-when 'new'
+when "new"
   options[:path] = ARGV.shift
   ProjectGenerator.new(options[:path]).generate
-when 'version'
+when "version"
   puts Handcar::VERSION
-when 'serve', 's'
+when "serve", "s"
   Handcar::Server.new(options).serve
 end

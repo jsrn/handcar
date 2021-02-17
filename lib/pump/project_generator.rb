@@ -1,4 +1,4 @@
-require 'fileutils'
+require "fileutils"
 
 class ProjectGenerator
   attr_reader :path
@@ -8,7 +8,7 @@ class ProjectGenerator
   end
 
   def generate
-    source = "#{File.dirname(__FILE__ )}/templates/app"
+    source = "#{File.dirname(__FILE__)}/templates/app"
     FileUtils.copy_entry(source, path)
   end
 end

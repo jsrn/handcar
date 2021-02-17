@@ -1,4 +1,4 @@
-require 'erubis'
+require "erubis"
 
 class View
   attr_reader :controller, :view_name, :locals
@@ -10,7 +10,7 @@ class View
   end
 
   def result
-    filename = File.join 'app', 'views', controller.controller_name, "#{view_name}.html.erb"
+    filename = File.join "app", "views", controller.controller_name, "#{view_name}.html.erb"
     template = File.read filename
     eruby = Erubis::Eruby.new(template)
     eruby.result(locals.merge(env: controller.env))
