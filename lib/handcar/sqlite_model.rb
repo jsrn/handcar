@@ -47,11 +47,11 @@ module Handcar
       end
 
       def method_missing(method, *args, &block)
-        if self.class.schema.keys.include?(method.to_s)
+        if self.class.schema.key?(method.to_s)
           self[method]
         elsif method.to_s.end_with?("=")
           potential_attribute = method.to_s[0..-2]
-          if self.class.schema.keys.include?(potential_attribute)
+          if self.class.schema.key?(potential_attribute)
             self[potential_attribute] = args.first
           else
             super(method, *args, &block)
@@ -62,9 +62,9 @@ module Handcar
       end
 
       def respond_to_missing?(method, *args, &block)
-        if schema.keys.include?(method.to_s)
+        if schema.key?(method.to_s)
           true
-        elsif method.to_s.end_with?("=") && schema.keys.include?(method.to_s[0..-2])
+        elsif method.to_s.end_with?("=") && schema.key?(method.to_s[0..-2])
           true
         else
           super(method, *args, &block)

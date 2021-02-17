@@ -33,10 +33,10 @@ module Handcar
       vars = []
       regexp_parts = parts.map { |part|
         if part[0] == ":"
-          vars << part[1..-1]
+          vars << part[1..]
           "([a-zA-Z0-9]+)"
         elsif part[0] == "*"
-          vars << part[1..-1]
+          vars << part[1..]
           "(.*)"
         else
           part
